@@ -1,0 +1,97 @@
+# This is the configuration file for "The Localhost Daily"
+
+# Main title displayed
+title = "The Localhost Daily"
+# How many characters that each article will show at maximum (not cutting in middle of words)
+max_description_chars = 300
+
+# For sunset/sunrise and weather using SMHI, so maybe only Swedish locations will work.
+lat = 51.851716
+lon = 13.6619255
+# How old an article can be to be considered material for the generated page
+max_age_in_days = 2
+# Number of columns displayed
+columns = 3
+# Host to ping:
+ping_host = "1.1.1.1"
+# Which Swedish electricity cost area. No support for electricity prices elsewhere
+electricity_area = "SE4"
+# Two currency exchanges, visit: frankfurter.app for which currency that are supported
+currency_from_1 = "EUR"
+currency_to_1 = "SEK"
+currency_from_2 = "USD"
+currency_to_2 = "SEK"
+# Color for the memory usage gauge of the machine that generates the localhost daily page
+memory_gauge_color = "#208060"
+# Color for disk usage gauge
+disk_gauge_color = "#208060"
+# And which mount point that use for the gauge
+disk_mount_point = "/"
+
+# Feeds to fetch to create the front page.
+feeds = [
+      "https://www.vintag.es/feeds/posts/default",
+      "https://www.worldhistory.org/rss/",
+      "http://feeds.arstechnica.com/arstechnica/index",
+      "http://feeds.feedburner.com/cnx-software/blog",
+      "https://ln.ht/_/feed/",
+      "https://hnrss.org/newest?points=150",
+      "http://www.phoronix.com/rss.php",
+      "http://www.thehistoryblog.com/feed",
+      "https://www.atlasobscura.com/feeds/latest",
+      "https://www.bing.com/HPImageArchive.aspx?format=rss&idx=0&n=1&mkt=en-US",
+      "http://api.flickr.com/services/feeds/groups_pool.gne?id=393035@N22&lang=en-us&format=atom",
+]
+
+# Lower screen link buttons.
+
+[[buttons]]
+icon = "ttrss.png"
+link = "https://192.168.11.1/ttrss"
+title = "TinyTiny RSS"
+
+[[buttons]]
+icon = "wiki.png"
+link = "https://192.168.11.1/wiki/start"
+title = "Wiki"
+
+[[buttons]]
+icon = "wallabag.svg"
+link = "https://192.168.11.1/wallabag"
+title = "Wiki"
+
+[[buttons]]
+icon = "domoticz.png"
+link = "https://192.168.11.115"
+title = "Domoticz"
+sub = "Home"
+
+[[buttons]]
+icon = "grafana_icon.svg"
+link = "https://192.168.11.115:3000/"
+title = "Grafana"
+sub = ""
+
+[[buttons]]
+icon = "zigbee.png"
+link = "http://192.168.11.115:8800"
+title = "Zigbee to MQTT"
+sub = ""
+
+[[buttons]]
+icon = "pastry.png"
+link = "http://192.168.11.115:9180/"
+title = "Pastry"
+sub = "Copy-paste.."
+
+[[buttons]]
+icon = "gitea-lg.png"
+link = "https://gitea.localdomain/"
+title = "Gitea"
+sub = ""
+
+[[buttons]]
+icon = "jomics.png"
+link = "http://192.168.11.61/albums/"
+title = "Jomics"
+sub = "Comics!"

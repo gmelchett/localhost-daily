@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>{{.Title}}</title>
+<link rel="stylesheet" href="./css/weather-icons.min.css">
+<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="96x96" href="favicons/favicon-96x96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+
+<style>
+  :root {
+    --paper-bg: #f6f2ec;
+    --frame-bg: #fff;
+    --ink: #111;
+    --muted: #666;
+    --visited: #444;
+    --border: #d9d4c9;
+  }
+
+  @font-face {
+      font-family: 'Libre Baskerville';
+      src: url('font/LibreBaskerville-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+  }
+  body {
+      background: var(--paper-bg);
+      color: var(--ink);
+      font-family: "Libre Baskerville", Georgia, serif;
+      margin: 0;
+      padding: 24px;
+      padding-bottom: 150px;
+  }
+  .weather-icon {
+      font-size: 24px;
+      color: #333;
+  }
+  .frame {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: var(--frame-bg);
+      padding: 18px;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      border-top: 6px solid var(--ink);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  }
+  .electricity {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+  }
+  .date {
+      text-align:right;
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-bottom:4px;
+  }
+  .run {
+      text-align:center;
+      font-size:0.9rem;
+      color:var(--muted);
+      margin-bottom:4px;
+  }
+  .fortune {
+      text-align:center;
+      font-style:italic;
+      font-family: "Georgia", serif;
+      font-size:1.1rem;
+      margin: 4px 0 2px 0;
+  }
+  .title-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 40px;
+      margin-bottom: 10px;
+  }
+  .gauge {
+      text-align: center;
+      width: 100px;
+  }
+  .gauge-label {
+      font-size: 12px;
+      color: #555;
+      margin-top: -4px;
+  }
+  .title {
+      text-align:center;
+      font-size:3.2rem;
+      letter-spacing:2px;
+      font-weight:700;
+      margin:0;
+  }
+  .subtitle {
+      text-align:center;
+      color:var(--muted);
+      font-size:0.95rem;
+      margin:6px 0 18px 0;
+  }
+  .subtitle span {
+      margin:0 10px;
+  }
+
+  /* Headline / links */
+  a {
+      color:inherit;
+      text-decoration:none;
+      font-weight:700;
+  }
+  a:visited {
+      color:var(--visited);
+  }
+  .feature-title a,
+  .art-title a {
+      font-weight:700;
+  }
+  .date-weather-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .weather-row {
+      display:flex;
+      justify-content:left;
+      gap:8px;
+      margin: 6px 0 18px 0;
+      color:var(--muted);
+  }
+  .layout {
+      display:flex;
+      gap:20px;
+      align-items:flex-start;
+      margin-bottom:10px;
+  }
+  .col {
+      flex:1;
+      min-width:0;
+  }
+  .article {
+      display:flex;
+      gap:12px;
+      margin-bottom:18px;
+      padding-bottom:8px;
+      border-bottom:1px dotted #e7e3db;
+      align-items:flex-start;
+  }
+  .art-media {
+      width:120px;
+      min-width:120px;
+      height:80px;
+      border:1px solid var(--border);
+      background:#f1efe9;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+  }
+  .art-media img {
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+  }
+  .img-placeholder {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      width:100%;
+      height:100%;
+      color:var(--muted);
+      font-size:0.8rem;
+      text-align:center;
+      background:#f9f8f6;
+  }
+  .art-body {
+      flex:1;
+      min-width:0;
+  }
+  .art-title {
+      font-size:1.05rem;
+      margin:0;
+      word-break:break-word;
+  }
+  .art-src {
+      color:var(--muted);
+      font-size:0.82rem;
+      margin-top:4px;
+  }
+  .art-desc {
+      margin-top:6px;
+      color:#222;
+      line-height:1.18;
+      font-size:0.95rem;
+  }
+  /* Variant A: side layout */
+  .article-side {
+      display: block;
+      overflow: hidden; /* contain float */
+  }
+  .article-side .art-media {
+      float: left;
+      width: 160px;
+      height: auto;
+      max-height: 140px;
+      margin: 0 14px 8px 0;
+  }
+  .article-side .art-media img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: cover;
+  }
+  .article-side .art-body {
+      display: block;
+      overflow: visible;
+  }
+  .article-side .art-title {
+      margin-top: 0;
+  }
+  .article-side::after {
+      content: "";
+      display: table;
+      clear: both;
+  }
+
+  /* Variant B: stacked layout */
+  .article-stacked {
+      flex-direction: column;
+      align-items: stretch;
+  }
+  .article-stacked .art-media {
+      width: 100%;
+      height: 180px;
+      margin-bottom: 6px;
+  }
+  .article-stacked .art-body {
+      width: 100%;
+  }
+  .ads {
+      display:flex;
+      gap:10px;
+      justify-content:center;
+      position:fixed;
+      bottom:0;
+      left:0;
+      right:0;
+      background:var(--paper-bg);
+      padding:10px 12px;
+      box-shadow:0 -6px 18px rgba(0,0,0,0.08);
+      border-top:1px solid var(--border);
+      z-index:2000;
+  }
+ .ad {
+      width:96px;
+      height:96px;
+      border:1px solid #cfc8b8;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:6px;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,0.04);
+      font-size:0.85rem;
+      color:var(--ink);
+      text-decoration:none;
+  }
+  .ad img {
+      max-width:44px;
+      max-height:44px;
+      display:block;
+      margin-bottom:6px;
+  }
+  .ad strong {
+      font-size:0.95rem;
+      display:block;
+  }
+
+  @media (max-width:1000px){
+    .layout{
+	flex-direction:column;
+    }
+    .art-media{
+	width:100%;
+	min-width:0;
+	height:180px;
+    }
+  }
+  @media (max-width: 600px) {
+    .title-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+    /* Title spans full width */
+    .title-row .title {
+      flex-basis: 100%;
+      text-align: center;
+      font-size: 2.2rem;
+      order: 1;
+    }
+    /* Gauges share a row */
+    .title-row .gauge {
+      flex: 0 0 auto;
+      order: 2;
+    }
+    .title-row .gauge svg {
+      width: 80px;
+      height: 48px;
+    }
+    /* Electricity price block */
+    .title-row .electricity:first-of-type {
+      flex-basis: 100%;
+      order: 3;
+      text-align: center;
+    }
+    /* Exchange rate block */
+    .title-row .electricity:last-of-type {
+      flex-basis: 100%;
+      order: 4;
+      text-align: center;
+    }
+  }
+}
+
+</style>
+
+</head>
+<body>
+  <div class="frame">
+    <div class="date-weather-row">
+      <div class="date">{{.DateString}}</div>
+      <div class="sun"><i class="wi wi-day-sunny"></i>&uarr; {{.SunRise}}, &darr;{{.SunSet}}</div>
+      <div class="weather-row">
+	<div>Today: </div>
+	<div>
+          <i class="wi {{.TodaySymbol}}"></i>
+          {{.TodayTemp}}
+	</div>
+	<div>Tomorrow: </div>
+	<div>
+          <i class="wi {{.TomorrowSymbol}}"></i>
+          {{.TomorrowTemp}}
+	</div>
+      </div>
+    </div>
+
+    <div class="fortune">{{.Fortune}}</div>
+
+    <div class="title-row">
+      <div class="electricity">
+	<div class="date">{{.ElectricityPriceCurrent}}</div>
+	<div class="date">{{.ElectricityPriceMinMax}}</div>
+      </div>
+
+      <div class="gauge">
+	<svg viewBox="0 0 100 60" width="100" height="60">
+	  <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="#ddd" stroke-width="10" />
+	  <path d="{{.MemArc}}" fill="none" stroke="{{.MemGaugeColor}}" stroke-width="10" />
+	  <text x="50" y="45" text-anchor="middle" font-size="14" fill="#333">{{printf "%.0f" .MemUsage}}%</text>
+	</svg>
+	<div class="gauge-label">Memory usage</div>
+      </div>
+
+      <div class="title">{{.Title}}</div>
+
+      <div class="gauge">
+	<svg viewBox="0 0 100 60" width="100" height="60">
+	  <path d="M10,50 A40,40 0 0,1 90,50" fill="none" stroke="#ddd" stroke-width="10" />
+	  <path d="{{.DiskArc}}" fill="none" stroke="{{.DiskGaugeColor}}" stroke-width="10" />
+	  <text x="50" y="45" text-anchor="middle" font-size="14" fill="#333">{{printf "%.0f" .DiskUsage}}%</text>
+	</svg>
+	<div class="gauge-label">Disk usage</div>
+      </div>
+      <div class="electricity">
+	<div class="date">{{.ExchangeRate1}}</div>
+	<div class="date">{{.ExchangeRate2}}</div>
+      </div>
+    </div>
+
+    <div class="subtitle">
+      <span>Public IP: {{.PublicIP}}</span> |
+      <span>Ping: {{.PingResult}}</span> |
+      <span>{{.Uptime}}</span>
+    </div>
+
+    {{/* Main content: we expect .Items to be a slice of columns.  */}}
+    <main aria-live="polite">
+      {{if gt (len .Items) 0}}
+      <div class="layout" role="region" aria-label="news-columns">
+        {{/* If we had a feature inserted as first column, we still render all columns:
+        template assumes buildPageData may have prepended the feature as its own column. */}}
+        {{range $colIndex, $col := .Items}}
+        {{if and (eq $colIndex 0) (eq (len $col) 1) }}
+        {{/* we have shown the feature already */}}
+        {{else}}
+        <section class="col" aria-label="column-{{$colIndex}}">
+          {{range $i, $item := $col}}
+	  {{/* Variant A (side) or B (stacked) depending on $item.Layout */}}
+	  <article class="article {{if eq $item.Layout "stacked"}}article-stacked{{else}}article-side{{end}}" role="article">
+	    {{if $item.Image}}
+	    <div class="art-media">
+	      <img src="{{$item.Image}}"
+		   alt="article image"
+		   loading="lazy"
+		   onerror="this.style.display='none'; this.parentNode.querySelector('.img-placeholder').style.display='flex'">
+	    </div>
+	    {{end}}
+	    <div class="art-body">
+	      <h3 class="art-title"><a href="{{$item.Link}}" target="_blank" rel="noopener noreferrer">{{$item.Title}}</a></h3>
+	      <div class="art-src">{{$item.Source}} — {{$item.Published}}</div>
+	      <div class="art-desc">{{$item.Description}}</div>
+	    </div>
+	  </article>
+          {{end}}
+        </section>
+        {{end}}
+        {{end}}
+      </div>
+      {{else}}
+      <p style="text-align:center;color:var(--muted);padding:40px 0;">No news available right now.</p>
+      {{end}}
+    </main>
+
+    <div class="byline">Generated at {{.GeneratedAt.Format "15:04:05 MST"}}</div>
+  </div>
+
+  {{/* Fixed bottom ad / buttons row - always visible */}}
+
+  <nav class="ads">
+    {{range .Buttons}}
+    <a class="ad" href="{{.Link}}" target="_blank" rel="noopener noreferrer">
+      {{if .Icon}}<img src="{{.Icon}}" alt="{{.Title}} icon" onerror="this.style.display='none'">{{end}}
+      <strong>{{.Title}}</strong>
+      <div style="font-size:0.78rem;color:#6b6658;">{{.Sub}}</div>
+    </a>
+    {{end}}
+  </nav>
+
+</body>
+</html>
